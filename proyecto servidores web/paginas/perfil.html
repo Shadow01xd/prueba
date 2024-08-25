@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam - Perfil</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset de mÃ¡rgenes y padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1b2838;
+            color: #c7d5e0;
+            line-height: 1.6;
+        }
+
+        /* Estilos del Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #171a21;
+            padding: 15px 30px;
+            border-bottom: 2px solid #66c0f4;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav li {
+            margin-left: 30px;
+        }
+
+        .nav a {
+            color: #c7d5e0;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #171a21;
+            background-color: #66c0f4;
+            transform: scale(1.1);
+        }
+
+        .search-bar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #2a475e;
+            border-radius: 5px;
+            padding: 5px;
+            transition: all 0.4s ease;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #c7d5e0;
+            width: 200px;
+            transition: all 0.4s ease;
+        }
+
+        .search-bar input:focus {
+            width: 300px;
+            background-color: #1b2838;
+            outline: none;
+        }
+
+        .search-bar button {
+            background-color: #66c0f4;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #417a9b;
+        }
+
+        .main-content {
+            padding: 120px 30px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background-color: #2a475e;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+            border: 3px solid #66c0f4;
+            transition: transform 0.3s ease;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-details {
+            flex: 1;
+        }
+
+        .profile-details h2 {
+            color: #66c0f4;
+            margin-bottom: 5px;
+        }
+
+        .profile-details p {
+            margin-bottom: 10px;
+            color: #c7d5e0;
+            font-weight: 500;
+        }
+
+        .profile-details .edit-profile {
+            background-color: #66c0f4;
+            color: #1b2838;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .profile-details .edit-profile:hover {
+            background-color: #417a9b;
+            transform: scale(1.05);
+        }
+
+        .profile-content {
+            display: flex;
+        }
+
+        .profile-sidebar {
+            flex: 1;
+            background-color: #1b2838;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            margin-right: 20px;
+        }
+
+        .profile-sidebar h3 {
+            color: #66c0f4;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .profile-sidebar ul {
+            list-style: none;
+        }
+
+        .profile-sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .profile-sidebar ul li a {
+            color: #c7d5e0;
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .profile-sidebar ul li a:hover {
+            background-color: #66c0f4;
+            color: #1b2838;
+            transform: scale(1.05);
+        }
+
+        .profile-main {
+            flex: 3;
+            background-color: #2a475e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-main h3 {
+            color: #66c0f4;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .profile-main p {
+            color: #c7d5e0;
+            margin-bottom: 10px;
+        }
+
+        .profile-main .btn-primary {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #66c0f4;
+            color: #1b2838;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .profile-main .btn-primary:hover {
+            background-color: #417a9b;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background-color: #171a21;
+            color: #c7d5e0;
+            padding: 20px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .footer-section {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .footer-section h3 {
+            margin-top: 0;
+            color: #66c0f4;
+            font-weight: bold;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #c7d5e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #66c0f4;
+        }
+
+        .footer-bottom {
+            background-color: #1b2838;
+            color: #c7d5e0;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        /* Estilos del modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            padding-top: 60px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #1b2838;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #66c0f4;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .modal-content h2 {
+            color: #66c0f4;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .modal-content label {
+            color: #c7d5e0;
+            font-weight: bold;
+            display: block;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="email"],
+        .modal-content input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #66c0f4;
+            background-color: #2a475e;
+            color: #c7d5e0;
+            transition: border-color 0.3s, box-shadow 0.3s ease;
+        }
+
+        .modal-content input[type="text"]:focus,
+        .modal-content input[type="email"]:focus,
+        .modal-content input[type="file"]:focus {
+            border-color: #417a9b;
+            box-shadow: 0 0 10px #417a9b;
+            outline: none;
+        }
+
+        #avatarPreview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #66c0f4;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: transform 0.3s ease;
+        }
+
+        #avatarPreview:hover {
+            transform: scale(1.1);
+        }
+
+        .modal-content button {
+            background-color: #66c0f4;
+            color: #1b2838;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .modal-content button:hover {
+            background-color: #417a9b;
+            transform: scale(1.05);
+        }
+
+        .close {
+            color: #c7d5e0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 160px;
+            background-color: #171a21;
+            color: #fff;
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; 
+            left: 50%;
+            margin-left: -80px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip .tooltiptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #171a21 transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 100px 20px 20px;
+            }
+
+            .profile-content {
+                flex-direction: column;
+            }
+
+            .profile-sidebar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="logo.png" alt="Logo de Steam">
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="../index.html">Tienda</a></li>
+                <li><a href="biblioteca.html">Biblioteca</a></li>
+                <li><a href="comunidad.html">Comunidad</a></li>
+                <li><a href="perfil.html" class="active">Perfil</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar en Steam...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="profile-header">
+            <div class="profile-avatar tooltip">
+                <img src="avatar.jpg" alt="Avatar de Usuario">
+                <span class="tooltiptext">Click para ampliar</span>
+            </div>
+            <div class="profile-details">
+                <h2>Shadow</h2>
+                <p>Email: usuario@ejemplo.com</p>
+                <p>Nombre Completo: Miguel Angel Hernandez Hernandez</p>
+                <a href="#" class="edit-profile">Editar Perfil</a>
+            </div>
+        </section>
+
+        <div class="profile-content">
+            <aside class="profile-sidebar">
+                <h3>Configuración de Perfil</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-user"></i> Información Personal</a></li>
+                    <li><a href="#"><i class="fas fa-key"></i> Cambiar Contraseña</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Preferencias</a></li>
+                    <li><a href="#"><i class="fas fa-bell"></i> Notificaciones</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                </ul>
+            </aside>
+
+            <section class="profile-main">
+                <h3>Actividad Reciente</h3>
+                <p>Ultima Conexión: Hace 2 horas</p>
+                <p>Juegos en la biblioteca: 25</p>
+                <p>Amigos en Steam: 8</p>
+                <p>Comentarios en la comunidad: 15</p>
+                <a href="#" class="btn-primary" id="viewDetailsBtn">Ver Detalles</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal para editar perfil -->
+    <div id="editProfileModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Perfil</h2>
+
+            <!-- Campo para editar avatar -->
+            <label for="avatarInput">Cambiar Avatar</label>
+            <input type="file" id="avatarInput" accept="image/*">
+            <img id="avatarPreview" src="avatar.jpg" alt="Vista previa del avatar">
+
+            <!-- Campos para editar nombre, email, y fecha de miembro -->
+            <label for="usernameInput">Nombre de Usuario</label>
+            <input type="text" id="usernameInput" value="Nombre del Usuario">
+
+            <label for="emailInput">Email</label>
+            <input type="email" id="emailInput" value="usuario@ejemplo.com">
+
+            <label for="memberSinceInput">Nombre Completo</label>
+            <input type="text" id="memberSinceInput" value="Miguel Angel Hernandez Hernandez">
+
+            <button id="saveProfile">Guardar Cambios</button>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Detalles de Actividad Reciente -->
+    <div id="viewDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Detalles de Actividad Reciente</h2>
+            <p>Ultima Conexión: Hace 2 horas</p>
+            <p>Juegos en la biblioteca: 25</p>
+            <p>Amigos en Steam: 8</p>
+            <p>Comentarios en la comunidad: 15</p>
+            <button id="closeDetailsBtn">Cerrar</button>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Acerca de SteamClone</h3>
+                <p>SteamClone es una replica inspirada en la plataforma Steam para la demostración de diseño web y funcionalidades interactivas.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rapidos</h3>
+                <ul>
+                    <li><a href="index.html">Tienda</a></li>
+                    <li><a href="biblioteca.html">Biblioteca</a></li>
+                    <li><a href="comunidad.html">Comunidad</a></li>
+                    <li><a href="perfil.html">Perfil</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social">
+                <h3>Si­guenos</h3>
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SteamClone. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Obtener elementos del DOM
+        const editProfileBtn = document.querySelector('.edit-profile');
+        const modal = document.getElementById('editProfileModal');
+        const closeModal = document.querySelector('.close');
+        const avatarInput = document.getElementById('avatarInput');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const saveProfileBtn = document.getElementById('saveProfile');
+        const profileAvatarImg = document.querySelector('.profile-avatar img');
+        const usernameInput = document.getElementById('usernameInput');
+        const emailInput = document.getElementById('emailInput');
+        const memberSinceInput = document.getElementById('memberSinceInput');
+        const profileName = document.querySelector('.profile-details h2');
+        const profileEmail = document.querySelector('.profile-details p:nth-of-type(1)');
+        const profileMemberSince = document.querySelector('.profile-details p:nth-of-type(2)');
+
+        // Abrir el modal al hacer clic en "Editar Perfil"
+        editProfileBtn.addEventListener('click', function() {
+            modal.style.display = 'block';
+        });
+
+        // Cerrar el modal al hacer clic en la 'X'
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Previsualizar la imagen seleccionada
+        avatarInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Guardar los cambios del perfil
+        saveProfileBtn.addEventListener('click', function() {
+            // Actualizar avatar
+            profileAvatarImg.src = avatarPreview.src;
+            
+            // Actualizar nombre de usuario, email y miembro desde
+            profileName.textContent = usernameInput.value;
+            profileEmail.textContent = `Email: ${emailInput.value}`;
+            profileMemberSince.textContent = `Nombre Completo: ${memberSinceInput.value}`;
+            
+            modal.style.display = 'none';
+        });
+
+        // Cerrar el modal si se hace clic fuera del contenido del modal
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Modal para ver detalles de la actividad reciente
+        const viewDetailsBtn = document.getElementById('viewDetailsBtn');
+        const viewDetailsModal = document.getElementById('viewDetailsModal');
+        const closeDetailsBtn = viewDetailsModal.querySelector('.close');
+
+        // Abrir el modal al hacer clic en "Ver Detalles"
+        viewDetailsBtn.addEventListener('click', function() {
+            viewDetailsModal.style.display = 'block';
+        });
+
+        // Cerrar el modal al hacer clic en la 'X'
+        closeDetailsBtn.addEventListener('click', function() {
+            viewDetailsModal.style.display = 'none';
+        });
+
+        // Cerrar el modal si se hace clic fuera del contenido del modal
+        window.addEventListener('click', function(event) {
+            if (event.target == viewDetailsModal) {
+                viewDetailsModal.style.display = 'none';
+            }
+        });
+
+        // Cerrar el modal al hacer clic en el botÃ³n "Cerrar"
+        const closeDetailsButton = document.getElementById('closeDetailsBtn');
+        closeDetailsButton.addEventListener('click', function() {
+            viewDetailsModal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

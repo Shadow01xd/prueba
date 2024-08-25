@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam - Reseñas de Videojuegos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+            
+    </script>
+    <script>
+        ; //aristides
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0b141a;
+            color: #c7d5e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #121d26;
+            padding: 15px 30px;
+            border-bottom: 2px solid #39a9db;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav li {
+            margin-left: 30px;
+        }
+
+        .nav a {
+            color: #c7d5e0;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #121d26;
+            background-color: #39a9db;
+            transform: scale(1.1);
+        }
+
+        .search-bar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #1e2b34;
+            border-radius: 5px;
+            padding: 5px;
+            transition: all 0.4s ease;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #c7d5e0;
+            width: 250px;
+            transition: all 0.4s ease;
+        }
+
+        .search-bar input:focus {
+            width: 350px;
+            background-color: #121d26;
+            outline: none;
+        }
+
+        .search-bar button {
+            background-color: #39a9db;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #1e8ab3;
+        }
+
+        .main-content {
+            padding: 120px 30px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .featured-carousel {
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .carousel-item {
+            position: relative;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .carousel-caption {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 400px;
+        }
+
+        .carousel-caption h2 {
+            color: #39a9db;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .carousel-caption p {
+            color: #c7d5e0;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background-color: #39a9db;
+            color: #121d26;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            background-color: #1e8ab3;
+            transform: scale(1.05);
+        }
+
+        .sort-options {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            clear: both;
+        }
+
+        .sort-options label {
+            margin-right: 10px;
+            font-weight: bold;
+            color: #c7d5e0;
+        }
+
+        .sort-options select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #39a9db;
+            background-color: #1e2b34;
+            color: #c7d5e0;
+            transition: all 0.3s ease;
+        }
+
+        .sort-options select:focus {
+            outline: none;
+            border-color: #1e8ab3;
+            box-shadow: 0 0 10px #1e8ab3;
+        }
+
+        .game-list h2 {
+            color: #39a9db;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: left;
+            clear: both;
+        }
+
+        .game-list {
+            margin-top: 0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: left;
+        }
+
+        .game-item {
+            background-color: #1e2b34;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+            width: 240px;
+        }
+
+        .game-item img {
+            width: 100%;
+            height: 379px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-item h3 {
+            color: #39a9db;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .game-item p {
+            color: #c7d5e0;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .game-item .btn-secondary {
+            background-color: #1e8ab3;
+            color: #121d26;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
+        }
+
+        .game-item .btn-secondary:hover {
+            background-color: #39a9db;
+            transform: scale(1.05);
+        }
+
+        .game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            padding-top: 60px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #121d26;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #39a9db;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .modal-content h2 {
+            color: #39a9db;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #c7d5e0;
+            margin-bottom: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .modal-content .close {
+            color: #c7d5e0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-content .close:hover,
+        .modal-content .close:focus {
+            color: #fff;
+        }
+
+        .modal-content .btn-secondary {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #39a9db;
+            color: #121d26;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content .btn-secondary:hover {
+            background-color: #1e8ab3;
+            transform: scale(1.05);
+        }
+
+        .game-header {
+            clear: both;
+            margin-bottom: 20px; 
+        }
+
+        .game-header h2 {
+            color: #39a9db;
+            font-size: 28px;
+            margin: 0; 
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .field {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .field label {
+            font-weight: bold;
+            color: #c7d5e0;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .field input[type="email"],
+        .field input[type="text"],
+        .field input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #39a9db;
+            background-color: #1e2b34;
+            color: #c7d5e0;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .field input[type="email"]:focus,
+        .field input[type="text"]:focus,
+        .field input[type="tel"]:focus {
+            border-color: #1e8ab3;
+            box-shadow: 0 0 10px #1e8ab3;
+            outline: none;
+        }
+
+        .modal-content input[type="submit"] {
+            background-color: #39a9db;
+            color: #121d26;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .modal-content input[type="submit"]:hover {
+            background-color: #1e8ab3;
+            transform: scale(1.05);
+        }
+
+        .footer {
+            background-color: #121d26;
+            color: #c7d5e0;
+            padding: 20px 0;
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .footer-section {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .footer-section h3 {
+            margin-top: 0;
+            color: #39a9db;
+            font-weight: bold;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #c7d5e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #39a9db;
+        }
+
+        .footer-bottom {
+            background-color: #1e2b34;
+            color: #c7d5e0;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 100px 20px 20px;
+            }
+
+            .game-list {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+
+            .game-item img {
+                height: 300px;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="../img/logo.png" alt="Logo de Steam">
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="index.html">Tienda</a></li>
+                <li><a href="paginas/biblioteca.html">Biblioteca</a></li>
+                <li><a href="paginas/comunidad.html">Comunidad</a></li>
+                <li><a href="paginas/perfil.html">Perfil</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar en Steam...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="featured-carousel">
+            <div class="carousel-item active">
+                <img src="./img/baldursgateiii.jpg" alt="Juego Destacado">
+                <div class="carousel-caption">
+                    <h2>Juego Destacado</h2>
+                    <p>Descripción del juego destacado con los detalles más interesantes...</p>
+                    <button class="btn-primary" onclick="openGameModal('destacado')">Ver Más</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="sort-options">
+            <label for="sortSelect">Ordenar por:</label>
+            <select id="sortSelect">
+                <option value="price">Precio</option>
+                <option value="popularity">Popularidad</option>
+            </select>
+        </section>
+
+        <section class="game-header">
+            <h2>Juegos Populares</h2>
+        </section>
+
+        <section class="game-list">
+            <div class="game-item" data-name="Cyberpunk" data-price="44.99" data-popularity="5">
+                <img src="img/Cyberpunk.jpg" alt="Juego 1">
+                <h3>Cyberpunk</h3>
+                <p>Descripción breve del juego 1 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $44.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego1')">Ver Más</button>
+            </div>
+            <div class="game-item" data-name="Alan Wake 2" data-price="42.99" data-popularity="3">
+                <img src="img/alanwake2.jpg" alt="Juego 2">
+                <h3>Alan Wake 2</h3>
+                <p>Descripción breve del juego 2 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $42.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego2')">Ver Más</button>
+            </div>
+            <div class="game-item" data-name="Red Dead Redemption 2" data-price="59.99" data-popularity="5">
+                <img src="./img/reddeadredemption2.jpg" alt="Juego 3">
+                <h3>Red Dead Redemption 2</h3>
+                <p>Descripción breve del juego 1 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $59.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego3')">Ver Más</button>
+            </div>
+            <div class="game-item" data-name="Resident Evil 4 Remake" data-price="29.99" data-popularity="5">
+                <img src="./img/residentevil4remake.jpg" alt="Juego 4">
+                <h3>Resident Evil 4 Remake</h3>
+                <p>Descripción breve del juego 2 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $29.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego4')">Ver Más</button>
+            </div>
+            <div class="game-item" data-name="Persona 3 Reload" data-price="59.99" data-popularity="5">
+                <img src="./img/persona3reload.jpg" alt="Juego 5">
+                <h3>Persona 3 Reload</h3>
+                <p>Descripción breve del juego 2 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $59.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego5')">Ver Más</button>
+            </div>
+            <div class="game-item" data-name="Persona 5 Royal" data-price="50.99" data-popularity="5">
+                <img src="./img/persona5royal.jpg" alt="Juego 6">
+                <h3>Persona 5 Royal</h3>
+                <p>Descripción breve del juego 2 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $50.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego6')">Ver Más</button>
+            </div>
+            <div class="game-item" data-name="Elden Ring" data-price="47.99" data-popularity="5">
+                <img src="./img/eldenring.jpg" alt="Juego 7">
+                <h3>Elden Ring</h3>
+                <p>Descripción breve del juego 2 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $47.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego7')">Ver Más</button>
+            </div>
+            <div class="game-item" data-name="The Witcher 3" data-price="37.99" data-popularity="5">
+                <img src="./img/thewitcher3.jpg" alt="Juego 8">
+                <h3>The Witcher 3</h3>
+                <p>Descripción breve del juego 2 con algunos detalles importantes para el jugador...</p>
+                <p>Precio: $37.99</p>
+                <button class="btn-secondary" onclick="openGameModal('juego8')">Ver Más</button>
+            </div>
+        </section>
+    </main>
+
+    <div id="destacadoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('destacado')">&times;</span>
+            <h2>Baldurs Gate III - Información</h2>
+            <img src="./img/baldursgateiii.jpg" alt="Juego Destacado">
+            <p>Precio: $59.99</p>
+            <p>Nota: ★★★★☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>¡Increíble juego! Gráficos sorprendentes y jugabilidad impecable.</p>
+                <span class="rating">★★★★☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Buen juego, aunque la historia podría ser mejor.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Baldurs Gate III', '59.99', './img/baldursgateiii.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego1Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego1')">&times;</span>
+            <h2>Cyberpunk - Información</h2>
+            <img src="./img/Cyberpunk.jpg" alt="Juego 1">
+            <p>Precio: $44.99</p>
+            <p>Nota: ★★★★☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Este juego es una joya oculta, muy divertido y desafiante.</p>
+                <span class="rating">★★★★☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Me gusta, pero tiene algunos errores que deben corregirse.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Cyberpunk', '44.99', './img/Cyberpunk.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego2Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego2')">&times;</span>
+            <h2>Alan Wake 2 - Información</h2>
+            <img src="img/alanwake2.jpg" alt="Juego 2">
+            <p>Precio: $42.99</p>
+            <p>Nota: ★★★☆☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Los gráficos son impresionantes, pero la historia es un poco floja.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Divertido para jugar con amigos, pero se vuelve repetitivo.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Alan Wake 2', '42.99', 'img/alanwake2.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego3Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego3')">&times;</span>
+            <h2>Red Dead Redemption 2 - Información</h2>
+            <img src="./img/reddeadredemption2.jpg" alt="Juego 3">
+            <p>Precio: $59.99</p>
+            <p>Nota: ★★★☆☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Los gráficos son impresionantes, pero la historia es un poco floja.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Divertido para jugar con amigos, pero se vuelve repetitivo.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Red Dead Redemption 2', '59.99', './img/reddeadredemption2.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego4Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego4')">&times;</span>
+            <h2>Resident Evil 4 Remake - Información</h2>
+            <img src="./img/residentevil4remake.jpg" alt="Juego 4">
+            <p>Precio: $29.99</p>
+            <p>Nota: ★★★☆☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Los gráficos son impresionantes, pero la historia es un poco floja.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Divertido para jugar con amigos, pero se vuelve repetitivo.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Resident Evil 4 Remake', '29.99', './img/residentevil4remake.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego5Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego5')">&times;</span>
+            <h2>Persona 3 Reload - Información</h2>
+            <img src="./img/persona3reload.jpg" alt="Juego 5">
+            <p>Precio: $59.99</p>
+            <p>Nota: ★★★☆☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Los gráficos son impresionantes, pero la historia es un poco floja.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Divertido para jugar con amigos, pero se vuelve repetitivo.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Persona 3 Reload', '59.99', './img/persona3reload.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego6Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego6')">&times;</span>
+            <h2>Persona 5 Royal - Información</h2>
+            <img src="./img/persona5royal.jpg" alt="Juego 6">
+            <p>Precio: $50.99</p>
+            <p>Nota: ★★★☆☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Los gráficos son impresionantes, pero la historia es un poco floja.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Divertido para jugar con amigos, pero se vuelve repetitivo.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Persona 5 Royal', '50.99', './img/persona5royal.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego7Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego7')">&times;</span>
+            <h2>Elden Ring - Información</h2>
+            <img src="./img/eldenring.jpg" alt="Juego 7">
+            <p>Precio: $47.99</p>
+            <p>Nota: ★★★☆☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Los gráficos son impresionantes, pero la historia es un poco floja.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Divertido para jugar con amigos, pero se vuelve repetitivo.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('Elden Ring', '47.99', './img/eldenring.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="juego8Modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal('juego8')">&times;</span>
+            <h2>The Witcher 3 - Información</h2>
+            <img src="./img/thewitcher3.jpg" alt="Juego 8">
+            <p>Precio: $37.99</p>
+            <p>Nota: ★★★☆☆</p>
+            <h3>Reseñas:</h3>
+            <div class="review">
+                <h4>Usuario 1</h4>
+                <p>Los gráficos son impresionantes, pero la historia es un poco floja.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <div class="review">
+                <h4>Usuario 2</h4>
+                <p>Divertido para jugar con amigos, pero se vuelve repetitivo.</p>
+                <span class="rating">★★★☆☆</span>
+            </div>
+            <button class="btn-secondary" onclick="openPurchaseModal('The Witcher 3', '37.99', './img/thewitcher3.jpg')">Comprar</button>
+        </div>
+    </div>
+
+    <div id="purchaseModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePurchaseModal()">&times;</span>
+            <h2>Completa tu Compra</h2>
+            <form id="formCompra" onsubmit="confirmarCompra(event)">
+                <div class="field">
+                    <label for="cardNumber">Número de Tarjeta:</label>
+                    <input type="tel" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div>
+                <div class="field">
+                    <label for="cardExpiry">Fecha de Expiración (MM/AA):</label>
+                    <input type="text" id="cardExpiry" name="cardExpiry" placeholder="MM/AA" required>
+                </div>
+                <div class="field">
+                    <label for="cardCVC">CVC:</label>
+                    <input type="text" id="cardCVC" name="cardCVC" placeholder="CVC" required>
+                </div>
+                <div class="field">
+                    <label for="email">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <input type="submit" value="Confirmar Compra">
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Acerca de SteamClone</h3>
+                <p>SteamClone es una réplica inspirada en la plataforma Steam para la demostración de diseño web y funcionalidades interactivas.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="index.html">Tienda</a></li>
+                    <li><a href="paginas/biblioteca.html">Biblioteca</a></li>
+                    <li><a href="paginas/comunidad.html">Comunidad</a></li>
+                    <li><a href="paginas/perfil.html">Perfil</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social">
+                <h3>Síguenos</h3>
+                <ul>
+                    <li><a href="https://Facebook.com"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="https://x.com/?lang=es"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="https://instagram.com"><i class="fab fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SteamClone. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        let selectedGame = "";
+        let selectedPrice = "";
+
+        const emailjsConfig = {
+            account1: 'hOCKVGcmXP0Lis72e',
+            account2: 'lUQSrRhLmyoAm7EPl',
+            account3: 'VFkFcKR87YeoW4toc',
+            account4: 'YhG67-hoMfLA7XtNY',
+            account5:'9e1NIggYSQzxrQjmK',
+            
+        };
+
+        function openGameModal(gameId) {
+            const modal = document.getElementById(`${gameId}Modal`);
+            modal.style.display = 'block';
+        }
+
+        function closeGameModal(gameId) {
+            const modal = document.getElementById(`${gameId}Modal`);
+            modal.style.display = 'none';
+        }
+
+        function openPurchaseModal(game, price, imagen) {
+            selectedGame = game;
+            selectedPrice = price;
+
+            let imagenPath = normalizarRutaImagen(imagen);
+
+            console.log("Intentando abrir el modal con la imagen:", imagenPath);
+            const imgTest = new Image();
+            imgTest.src = imagenPath;
+            imgTest.onload = function() {
+                console.log("La imagen se cargó correctamente:", imagenPath);
+                document.getElementById('purchaseModal').style.display = 'block';
+                document.getElementById('email').value = '';
+            };
+            imgTest.onerror = function() {
+                console.error("Error: La imagen no se pudo cargar. Verifique la ruta:", imagenPath);
+                alert("La imagen del juego no se encontró. No se puede completar la compra.");
+            };
+        }
+
+        function closePurchaseModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        function confirmarCompra(event) {
+            event.preventDefault(); 
+
+            const emailInput = document.getElementById('email').value;
+
+            if (emailInput === '') {
+                alert('Por favor, ingresa un correo electrónico.');
+                return;
+            }
+
+            const templates = {
+                'Cyberpunk': { template_id: 'template_ctof49q', account: 'account2' },
+                'Alan Wake 2': { template_id: 'template_0tnkqgs', account: 'account2' },
+                'Red Dead Redemption 2': { template_id: 'template_gfzs3ri', account: 'account3' },
+                'Resident Evil 4 Remake': { template_id: 'template_m6fz5jg', account: 'account3' },
+                'Persona 3 Reload': { template_id: 'template_ifwek6f', account: 'account1' },
+                'Persona 5 Royal': { template_id: 'template_vp93whm', account: 'account1' },
+                'Elden Ring': { template_id: 'template_j3lp60e ', account: 'account4' },
+                'The Witcher 3': { template_id: 'template_say8shm', account: 'account4' },
+                'Baldurs Gate III': {template_id: 'template_gb7bver', account: 'account5'},
+            };
+
+            const selectedConfig = templates[selectedGame]; 
+
+            if (!selectedConfig) {
+                alert('No se encontró una plantilla para el juego seleccionado.');
+                return;
+            }
+
+            // Re-inicializa EmailJS con la cuenta seleccionada justo antes de enviar el correo
+            emailjs.init(emailjsConfig[selectedConfig.account]);
+
+            emailjs.send("default_service", selectedConfig.template_id, {
+                reply_to: emailInput,
+                to_name: "Usuario",
+                message: `Has comprado el juego: ${selectedGame} por $${selectedPrice}`
+            }).then(() => {
+                registrarJuegoEnBiblioteca(selectedGame, selectedPrice, `./img/${selectedGame.toLowerCase().replace(/\s+/g, '')}.jpg`);
+                alert('¡Compra confirmada y registrada en tu biblioteca!');
+                closePurchaseModal(); 
+            }, (err) => {
+                alert('Error al enviar el correo: ' + JSON.stringify(err));
+            });
+        }
+
+        function registrarJuegoEnBiblioteca(nombre, precio, imagen) {
+            let juegosComprados = JSON.parse(localStorage.getItem('juegosComprados')) || [];
+
+            let imagenPath = `../img/${imagen.split('/').pop()}`; 
+
+            console.log("Guardando imagen con ruta: ", imagenPath);
+
+            const juego = {
+                nombre: nombre,
+                imagen: imagenPath,
+                precio: precio,
+                horasJugadas: '0h',
+                installed: 'yes',
+                favorite: 'no',
+                recent: 'yes'
+            };
+
+            juegosComprados.push(juego);
+            localStorage.setItem('juegosComprados', JSON.stringify(juegosComprados));
+
+            console.log("Juegos guardados en localStorage: ", juegosComprados);
+        }
+
+        function normalizarRutaImagen(imagen) {
+            let imagenNombre = imagen.split('/').pop();
+
+            if (imagenNombre.endsWith('.jpg.jpg')) {
+                imagenNombre = imagenNombre.replace('.jpg.jpg', '.jpg');
+            }
+
+            return `../img/${imagenNombre}`;
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

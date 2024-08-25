@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam - Comunidad</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Mejoras en los estilos del modal */
+        .modal-content {
+            background-color: #2a475e;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content h2 {
+            color: #c7d5e0;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content textarea {
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #1b2838;
+            background-color: #1b2838;
+            color: #c7d5e0;
+            font-size: 1rem;
+            transition: border-color 0.3s, background-color 0.3s;
+            outline: none;
+        }
+
+        .modal-content input[type="text"]::placeholder,
+        .modal-content textarea::placeholder {
+            color: #95a5a6;
+        }
+
+        .modal-content input[type="text"]:focus,
+        .modal-content textarea:focus {
+            border-color: #66c0f4;
+            background-color: #2a475e;
+        }
+
+        .modal-content button {
+            background-color: #66c0f4;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+        }
+
+        .modal-content button:hover {
+            background-color: #417a9b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content .close,
+        .modal-content .close-post-modal {
+            color: #c7d5e0;
+            font-size: 24px;
+            float: right;
+            cursor: pointer;
+        }
+
+        .modal-content .close:hover,
+        .modal-content .close-post-modal:hover {
+            color: #66c0f4;
+        }
+
+        /* Estilos generales de la página */
+        .post-item {
+            background-color: #101822;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease-out forwards;
+            position: relative;
+        }
+
+        .post-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .post-actions {
+            margin-top: 15px;
+        }
+
+        .post-actions button {
+            margin-right: 10px;
+        }
+
+        .post-actions button.liked {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .delete-btn, .edit-btn {
+            display: none;
+            position: absolute;
+            top: 10px;
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .edit-btn {
+            right: 80px;
+            background-color: #3498db;
+        }
+
+        .delete-btn {
+            right: 10px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .edit-btn:hover {
+            background-color: #2980b9;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .sidebar h2 {
+            font-size: 1.5em;
+            color: #66c0f4;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            color: #c7d5e0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: #66c0f4;
+            color: #34495e;
+            transform: scale(1.05);
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+        }
+
+        .comments-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .comments-section h4 {
+            color: #66c0f4;
+            margin-bottom: 10px;
+        }
+
+        .comment {
+            background-color: #2a475e;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .comment .edit-comment-btn,
+        .comment .delete-comment-btn {
+            display: none;
+            position: absolute;
+            top: 10px;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .comment .edit-comment-btn {
+            right: 80px;
+            background-color: #3498db;
+        }
+
+        .comment .delete-comment-btn {
+            right: 10px;
+            background-color: #e74c3c;
+        }
+
+        .comment .delete-comment-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .comment .edit-comment-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .comment:hover .edit-comment-btn,
+        .comment:hover .delete-comment-btn {
+            display: block;
+        }
+
+        .comment-input {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .comment-input textarea {
+            resize: none;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #66c0f4;
+            background-color: #101822;
+            color: #c7d5e0;
+            margin-bottom: 10px;
+        }
+
+        .comment-input button {
+            align-self: flex-end;
+            background-color: #66c0f4;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+
+        .comment-input button:hover {
+            background-color: #417a9b;
+        }
+
+        .post-form {
+            margin-bottom: 30px;
+            background-color: #101822;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .post-form input, .post-form textarea {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #66c0f4;
+            background-color: #2a475e;
+            color: #c7d5e0;
+            font-size: 1rem;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+
+        .post-form input:focus, .post-form textarea:focus {
+            border-color: #417a9b;
+            background-color: #34495e;
+            outline: none;
+        }
+
+        .post-form button {
+            background-color: #66c0f4;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .post-form button:hover {
+            background-color: #417a9b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Estilos para los modales */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding-top: 60px;
+        }
+
+        .post-form-button {
+            background-color: #66c0f4;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+            display: block;
+            width: max-content;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .post-form-button:hover {
+            background-color: #417a9b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="logo.png" alt="Logo de Steam">
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="../index.html">Tienda</a></li>
+                <li><a href="biblioteca.html">Biblioteca</a></li>
+                <li><a href="comunidad.html" class="active">Comunidad</a></li>
+                <li><a href="perfil.html">Perfil</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Buscar en la comunidad...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="community-container">
+            <button id="openPostModal" class="post-form-button">Realizar publicación</button>
+
+            <section class="posts-section">
+                <h2>Publicaciones</h2>
+
+                <div class="post-item">
+                    <button class="delete-btn">Eliminar</button>
+                    <button class="edit-btn">Editar</button>
+                    <h3>Mejorando mis habilidades en Dota 2</h3>
+                    <p>He estado practicando mucho últimamente y quería compartir algunos consejos...</p>
+                    <span class="post-author">Por Alex</span>
+                    <div class="post-actions">
+                        <button class="btn-secondary like-btn"><i class="fas fa-thumbs-up"></i> Me gusta <span class="like-count">0</span></button>
+                        <button class="btn-secondary comment-btn"><i class="fas fa-comment"></i> Comentar</button>
+                    </div>
+                    <div class="comments-section">
+                        <h4>Comentarios:</h4>
+                        <div class="comment-list"></div>
+                        <div class="comment-input">
+                            <textarea rows="3" placeholder="Escribe un comentario..."></textarea>
+                            <button class="add-comment-btn">Agregar Comentario</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-item">
+                    <button class="delete-btn">Eliminar</button>
+                    <button class="edit-btn">Editar</button>
+                    <h3>Nuevo mod para Skyrim: ¡Épico!</h3>
+                    <p>Acabo de descubrir un mod que añade nuevas misiones y armas. ¡Altamente recomendado!</p>
+                    <span class="post-author">Por Jamie</span>
+                    <div class="post-actions">
+                        <button class="btn-secondary like-btn"><i class="fas fa-thumbs-up"></i> Me gusta <span class="like-count">0</span></button>
+                        <button class="btn-secondary comment-btn"><i class="fas fa-comment"></i> Comentar</button>
+                    </div>
+                    <div class="comments-section">
+                        <h4>Comentarios:</h4>
+                        <div class="comment-list"></div>
+                        <div class="comment-input">
+                            <textarea rows="3" placeholder="Escribe un comentario..."></textarea>
+                            <button class="add-comment-btn">Agregar Comentario</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-item">
+                    <button class="delete-btn">Eliminar</button>
+                    <button class="edit-btn">Editar</button>
+                    <h3>Mejores estrategias para Among Us</h3>
+                    <p>He recopilado algunas estrategias que me han ayudado a ganar más partidas...</p>
+                    <span class="post-author">Por Taylor</span>
+                    <div class="post-actions">
+                        <button class="btn-secondary like-btn"><i class="fas fa-thumbs-up"></i> Me gusta <span class="like-count">0</span></button>
+                        <button class="btn-secondary comment-btn"><i class="fas fa-comment"></i> Comentar</button>
+                    </div>
+                    <div class="comments-section">
+                        <h4>Comentarios:</h4>
+                        <div class="comment-list"></div>
+                        <div class="comment-input">
+                            <textarea rows="3" placeholder="Escribe un comentario..."></textarea>
+                            <button class="add-comment-btn">Agregar Comentario</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <h2>Grupos Populares</h2>
+                <ul class="group-list">
+                    <li><a href="#"><i class="fas fa-users"></i> Jugadores de Dota 2</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Aficionados de Skyrim</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Comunidad Among Us</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Fans de Cyberpunk 2077</a></li>
+                    <li><a href="#"><i class="fas fa-users"></i> Gamers Retro</a></li>
+                </ul>
+            </aside>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Acerca de SteamClone</h3>
+                <p>SteamClone es una réplica inspirada en la plataforma Steam para la demostración de diseño web y funcionalidades interactivas.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="index.html">Tienda</a></li>
+                    <li><a href="biblioteca.html">Biblioteca</a></li>
+                    <li><a href="comunidad.html">Comunidad</a></li>
+                    <li><a href="#">Perfil</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social">
+                <h3>Síguenos</h3>
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SteamClone. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modal de creación de publicación -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <span class="close-post-modal">&times;</span>
+            <h2>Crear una nueva publicación</h2>
+            <input type="text" id="post-title" placeholder="Título de la publicación" />
+            <textarea id="post-content" rows="6" placeholder="Contenido de la publicación"></textarea>
+            <button id="submit-post">Publicar</button>
+        </div>
+    </div>
+
+    <!-- Modal de edición de publicación -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Editar Publicación</h2>
+            <input type="text" id="edit-title" placeholder="Título de la publicación" />
+            <textarea id="edit-content" rows="6" placeholder="Contenido de la publicación"></textarea>
+            <button id="save-edit">Guardar Cambios</button>
+        </div>
+    </div>
+
+    <!-- Modal de edición de comentario -->
+    <div id="editCommentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-comment-modal">&times;</span>
+            <h2>Editar Comentario</h2>
+            <textarea id="edit-comment-content" rows="4" placeholder="Contenido del comentario"></textarea>
+            <button id="save-comment-edit">Guardar Cambios</button>
+        </div>
+    </div>
+
+    <script>
+        // Función para manejar likes
+        function handleLikeButtonClick(event) {
+            const button = event.currentTarget;
+            const likeCount = button.querySelector('.like-count');
+            let count = parseInt(likeCount.textContent);
+
+            if (button.classList.contains('liked')) {
+                count--;
+                likeCount.textContent = count;
+                button.classList.remove('liked');
+            } else {
+                count++;
+                likeCount.textContent = count;
+                button.classList.add('liked');
+            }
+        }
+
+        // Función para manejar el toggle de comentarios
+        function handleCommentButtonClick(event) {
+            const commentsSection = event.currentTarget.closest('.post-item').querySelector('.comments-section');
+            commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Función para agregar un comentario
+        function handleAddCommentButtonClick(event) {
+            const commentInput = event.currentTarget.previousElementSibling;
+            const commentText = commentInput.value.trim();
+            if (commentText !== '') {
+                const commentList = event.currentTarget.closest('.comments-section').querySelector('.comment-list');
+                const newComment = document.createElement('div');
+                newComment.classList.add('comment');
+                newComment.innerHTML = `
+                    <span class="comment-text">${commentText}</span>
+                    <button class="edit-comment-btn">Editar</button>
+                    <button class="delete-comment-btn">Eliminar</button>
+                `;
+                commentList.appendChild(newComment);
+                commentInput.value = ''; // Limpiar el área de texto
+
+                // Añadir eventos a los nuevos botones de comentario
+                newComment.querySelector('.edit-comment-btn').addEventListener('click', handleEditCommentButtonClick);
+                newComment.querySelector('.delete-comment-btn').addEventListener('click', handleDeleteCommentButtonClick);
+            }
+        }
+
+        // Función para manejar la eliminación de publicaciones
+        function handleDeleteButtonClick(event) {
+            const postItem = event.currentTarget.closest('.post-item');
+            postItem.remove();
+        }
+
+        // Variables globales para la edición de publicaciones y comentarios
+        let currentPostItem = null;
+        let currentCommentItem = null;
+
+        // Función para manejar la edición de publicaciones
+        function handleEditButtonClick(event) {
+            currentPostItem = event.currentTarget.closest('.post-item');
+            const titleElement = currentPostItem.querySelector('h3');
+            const contentElement = currentPostItem.querySelector('p');
+
+            document.getElementById('edit-title').value = titleElement.textContent;
+            document.getElementById('edit-content').value = contentElement.textContent;
+
+            // Mostrar el modal de edición de publicación
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Función para guardar los cambios de la publicación
+        function saveEdit() {
+            const newTitle = document.getElementById('edit-title').value.trim();
+            const newContent = document.getElementById('edit-content').value.trim();
+
+            if (newTitle !== '' && newContent !== '') {
+                currentPostItem.querySelector('h3').textContent = newTitle;
+                currentPostItem.querySelector('p').textContent = newContent;
+
+                // Cerrar el modal
+                document.getElementById('editModal').style.display = 'none';
+            }
+        }
+
+        // Función para manejar la edición de comentarios
+        function handleEditCommentButtonClick(event) {
+            currentCommentItem = event.currentTarget.closest('.comment');
+            const commentContent = currentCommentItem.querySelector('.comment-text').textContent.trim();
+
+            document.getElementById('edit-comment-content').value = commentContent;
+
+            // Mostrar el modal de edición de comentario
+            document.getElementById('editCommentModal').style.display = 'block';
+        }
+
+        // Función para guardar los cambios del comentario
+        function saveCommentEdit() {
+            const newCommentContent = document.getElementById('edit-comment-content').value.trim();
+
+            if (newCommentContent !== '') {
+                currentCommentItem.querySelector('.comment-text').textContent = newCommentContent;
+
+                // Cerrar el modal
+                document.getElementById('editCommentModal').style.display = 'none';
+            }
+        }
+
+        // Función para manejar la eliminación de comentarios
+        function handleDeleteCommentButtonClick(event) {
+            const commentItem = event.currentTarget.closest('.comment');
+            commentItem.remove();
+        }
+
+        // Función para abrir el modal de publicación
+        function openPostModal() {
+            document.getElementById('postModal').style.display = 'block';
+        }
+
+        // Función para cerrar el modal de publicación
+        function closePostModal() {
+            document.getElementById('postModal').style.display = 'none';
+        }
+
+        // Función para cerrar el modal de edición de publicación
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Función para cerrar el modal de edición de comentario
+        function closeCommentModal() {
+            document.getElementById('editCommentModal').style.display = 'none';
+        }
+
+        // Función para crear una nueva publicación
+        function handleNewPost() {
+            const title = document.getElementById('post-title').value.trim();
+            const content = document.getElementById('post-content').value.trim();
+
+            if (title !== '' && content !== '') {
+                const newPostItem = document.createElement('div');
+                newPostItem.classList.add('post-item');
+                newPostItem.innerHTML = `
+                    <button class="delete-btn">Eliminar</button>
+                    <button class="edit-btn">Editar</button>
+                    <h3>${title}</h3>
+                    <p>${content}</p>
+                    <span class="post-author">Por Shadow</span>
+                    <div class="post-actions">
+                        <button class="btn-secondary like-btn"><i class="fas fa-thumbs-up"></i> Me gusta <span class="like-count">0</span></button>
+                        <button class="btn-secondary comment-btn"><i class="fas fa-comment"></i> Comentar</button>
+                    </div>
+                    <div class="comments-section">
+                        <h4>Comentarios:</h4>
+                        <div class="comment-list"></div>
+                        <div class="comment-input">
+                            <textarea rows="3" placeholder="Escribe un comentario..."></textarea>
+                            <button class="add-comment-btn">Agregar Comentario</button>
+                        </div>
+                    </div>
+                `;
+
+                document.querySelector('.posts-section').appendChild(newPostItem);
+
+                document.getElementById('post-title').value = '';
+                document.getElementById('post-content').value = '';
+
+                newPostItem.querySelector('.delete-btn').style.display = 'block';
+                newPostItem.querySelector('.edit-btn').style.display = 'block';
+
+                newPostItem.querySelector('.delete-btn').addEventListener('click', handleDeleteButtonClick);
+                newPostItem.querySelector('.edit-btn').addEventListener('click', handleEditButtonClick);
+                newPostItem.querySelector('.like-btn').addEventListener('click', handleLikeButtonClick);
+                newPostItem.querySelector('.comment-btn').addEventListener('click', handleCommentButtonClick);
+                newPostItem.querySelector('.add-comment-btn').addEventListener('click', handleAddCommentButtonClick);
+
+                // Cerrar el modal de publicación después de crear la publicación
+                closePostModal();
+            }
+        }
+
+        // Inicializar eventos para publicaciones existentes
+        document.querySelectorAll('.like-btn').forEach(button => button.addEventListener('click', handleLikeButtonClick));
+        document.querySelectorAll('.comment-btn').forEach(button => button.addEventListener('click', handleCommentButtonClick));
+        document.querySelectorAll('.add-comment-btn').forEach(button => button.addEventListener('click', handleAddCommentButtonClick));
+
+        document.querySelectorAll('.post-item').forEach(post => {
+            if (post.querySelector('.post-author').textContent === 'Por Shadow') {
+                post.querySelector('.delete-btn').style.display = 'block';
+                post.querySelector('.edit-btn').style.display = 'block';
+                post.querySelector('.delete-btn').addEventListener('click', handleDeleteButtonClick);
+                post.querySelector('.edit-btn').addEventListener('click', handleEditButtonClick);
+            }
+        });
+
+        document.getElementById('submit-post').addEventListener('click', handleNewPost);
+
+        // Asociar eventos para el botón de abrir modal de publicación
+        document.getElementById('openPostModal').addEventListener('click', openPostModal);
+
+        // Asociar eventos para cerrar los modales
+        document.querySelector('.close-post-modal').addEventListener('click', closePostModal);
+        document.querySelector('.close').addEventListener('click', closeModal);
+        document.querySelector('.close-comment-modal').addEventListener('click', closeCommentModal);
+
+        // Asociar evento para guardar la edición de publicación
+        document.getElementById('save-edit').addEventListener('click', saveEdit);
+
+        // Asociar eventos para guardar la edición de comentarios
+        document.getElementById('save-comment-edit').addEventListener('click', saveCommentEdit);
+
+        // Cerrar los modales al hacer clic fuera de ellos
+        window.onclick = function(event) {
+            const postModal = document.getElementById('postModal');
+            const editModal = document.getElementById('editModal');
+            const editCommentModal = document.getElementById('editCommentModal');
+
+            if (event.target === postModal) {
+                postModal.style.display = 'none';
+            }
+            if (event.target === editModal) {
+                editModal.style.display = 'none';
+            }
+            if (event.target === editCommentModal) {
+                editCommentModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

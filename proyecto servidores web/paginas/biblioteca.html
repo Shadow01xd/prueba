@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steam - Biblioteca</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="../EmulatorJS-main/docs/favicon.ico" sizes="16x16 32x32 48x48 64x64" type="image/vnd.microsoft.icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #0b141a;
+            color: #c7d5e0;
+            line-height: 1.6;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #121d26;
+            padding: 15px 30px;
+            border-bottom: 2px solid #39a9db;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .logo img {
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.1);
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav li {
+            margin-left: 30px;
+        }
+
+        .nav a {
+            color: #c7d5e0;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 15px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #121d26;
+            background-color: #39a9db;
+            transform: scale(1.1);
+        }
+
+        .search-bar {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background-color: #1e2b34;
+            border-radius: 5px;
+            padding: 5px;
+            transition: all 0.4s ease;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #c7d5e0;
+            width: 250px;
+            transition: all 0.4s ease;
+        }
+
+        .search-bar input:focus {
+            width: 350px;
+            background-color: #121d26;
+            outline: none;
+        }
+
+        .search-bar button {
+            background-color: #39a9db;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: #1e8ab3;
+        }
+
+        .main-content {
+            padding: 120px 30px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .library-header h1 {
+            color: #39a9db;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .library-filters {
+            display: flex;
+            align-items: center;
+        }
+
+        .library-filters label {
+            margin-right: 10px;
+            font-weight: bold;
+            color: #c7d5e0;
+        }
+
+        .library-filters select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #39a9db;
+            background-color: #1e2b34;
+            color: #c7d5e0;
+            transition: all 0.3s ease;
+        }
+
+        .library-filters select:focus {
+            outline: none;
+            border-color: #1e8ab3;
+            box-shadow: 0 0 10px #1e8ab3;
+        }
+
+        .game-library {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .game-item {
+            background-color: #1e2b34;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-item img {
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-item h3 {
+            color: #39a9db;
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        .game-item p {
+            color: #c7d5e0;
+            margin-bottom: 10px;
+        }
+
+        .game-item .btn-primary,
+        .game-item .btn-secondary,
+        .game-item .btn-danger {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 5px 0;
+        }
+
+        .btn-primary {
+            background-color: #39a9db;
+            color: #121d26;
+        }
+
+        .btn-primary:hover {
+            background-color: #1e8ab3;
+            transform: scale(1.05);
+        }
+
+        .btn-secondary {
+            background-color: #1e8ab3;
+            color: #121d26;
+        }
+
+        .btn-secondary:hover {
+            background-color: #39a9db;
+            transform: scale(1.05);
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);
+        }
+
+        .game-item .tooltip {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: #121d26;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: none;
+        }
+
+        .game-item:hover .tooltip {
+            display: block;
+        }
+
+        .footer {
+            background-color: #121d26;
+            color: #c7d5e0;
+            padding: 20px 0;
+            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        .footer-section {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .footer-section h3 {
+            margin-top: 0;
+            color: #39a9db;
+            font-weight: bold;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #c7d5e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #39a9db;
+        }
+
+        .footer-bottom {
+            background-color: #1e2b34;
+            color: #c7d5e0;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            padding-top: 60px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: #121d26;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #39a9db;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .modal-content h2 {
+            color: #39a9db;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #c7d5e0;
+            margin-bottom: 15px;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .modal-content .close {
+            color: #c7d5e0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .modal-content .close:hover,
+        .modal-content .close:focus {
+            color: #fff;
+        }
+
+        .modal-content .btn-secondary {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #39a9db;
+            color: #121d26;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content .btn-secondary:hover {
+            background-color: #1e8ab3;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 100px 20px 20px;
+            }
+
+            .library-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .game-library {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="../img/logo.png" alt="Logo de Steam">
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="../index.html">Tienda</a></li>
+                <li><a href="biblioteca.html" class="active">Biblioteca</a></li>
+                <li><a href="comunidad.html">Comunidad</a></li>
+                <li><a href="perfil.html">Perfil</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" id="searchLibrary" placeholder="Buscar en tu biblioteca...">
+            <button><i class="fas fa-search"></i></button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="library-header">
+            <h1>Tu Biblioteca</h1>
+            <div class="library-filters">
+                <label for="filterSelect">Filtrar por:</label>
+                <select id="filterSelect">
+                    <option value="all">Todos los juegos</option>
+                    <option value="installed">Instalados</option>
+                    <option value="favorites">Favoritos</option>
+                    <option value="recent">Recientes</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="game-library" id="gameLibrary">
+            <!-- Aquí se cargarán los juegos comprados -->
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3>Acerca de SteamClone</h3>
+                <p>SteamClone es una replica inspirada en la plataforma Steam para la demostracion de diseño web y funcionalidades interactivas.</p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rapidos</h3>
+                <ul>
+                    <li><a href="../index.html">Tienda</a></li>
+                    <li><a href="biblioteca.html">Biblioteca</a></li>
+                    <li><a href="comunidad.html">Comunidad</a></li>
+                    <li><a href="perfil.html">Perfil</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social">
+                <h3>Síguenos</h3>
+                <ul>
+                    <li><a href="#"><i class="fab fa-facebook-f"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SteamClone. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <div id="gameDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGameModal()">&times;</span>
+            <h2 id="modalGameTitle">Título del Juego</h2>
+            <img id="modalGameImage" src="" alt="Imagen del Juego">
+            <p id="modalGameDescription">Descripción extendida del juego...</p>
+            <p id="modalGamePrice">Precio: $00.00</p>
+            <p id="modalGameRating">Calificación: ★★★★☆</p>
+            <div id="modalGameReviews">
+                <h3>Reseñas:</h3>
+                <p id="review1">Reseña 1...</p>
+                <p id="review2">Reseña 2...</p>
+            </div>
+            <a href="#" class="btn-secondary" onclick="closeGameModal()">Cerrar</a>
+        </div>
+    </div>
+
+    <script>
+       document.addEventListener('DOMContentLoaded', function() {
+    const gameLibrary = document.getElementById('gameLibrary');
+    const filterSelect = document.getElementById('filterSelect');
+    let juegosComprados = JSON.parse(localStorage.getItem('juegosComprados')) || [];
+
+    // Agregar manualmente el "Emulador" si no existe
+    const emulador = {
+        nombre: 'Emulador',
+        imagen: '../img/logo.png',  // Asegúrate de que la imagen existe en esta ruta
+        precio: '0',
+        horasJugadas: '0h',
+        installed: 'yes',
+        favorite: 'no',
+        recent: 'yes'
+    };
+
+    // Verificar si el emulador ya está en la biblioteca
+    const emuladorExists = juegosComprados.some(juego => juego.nombre === 'Emulador');
+
+    if (!emuladorExists) {
+        juegosComprados.push(emulador);
+        localStorage.setItem('juegosComprados', JSON.stringify(juegosComprados));
+    }
+
+    function renderLibrary(filteredGames) {
+        gameLibrary.innerHTML = '';
+        filteredGames.forEach((juego, index) => {
+            const imgTest = new Image();
+            imgTest.src = juego.imagen;
+            imgTest.onload = function() {
+                const gameItem = document.createElement('div');
+                gameItem.className = 'game-item';
+                gameItem.innerHTML = `
+                    <img src="${juego.imagen}" alt="${juego.nombre}">
+                    <h3>${juego.nombre}</h3>
+                    <p>Horas jugadas: ${juego.horasJugadas}</p>
+                    <p>Precio: $${juego.precio}</p>
+                    <button class="btn-secondary" onclick="verMasDetalles(${index})">Ver Más</button>
+                    <button class="btn-primary" onclick="location.href='../EmulatorJS-main/index.html'">Play</button>
+                    <button class="btn-danger" onclick="eliminarJuego(${index})">Eliminar</button>
+                `;
+                gameLibrary.appendChild(gameItem);
+            };
+            
+        });
+    }
+
+    filterSelect.addEventListener('change', function() {
+        const filter = filterSelect.value;
+        let filteredGames;
+
+        switch(filter) {
+            case 'installed':
+                filteredGames = juegosComprados.filter(juego => juego.installed === 'yes');
+                break;
+            case 'favorites':
+                filteredGames = juegosComprados.filter(juego => juego.favorite === 'yes');
+                break;
+            case 'recent':
+                filteredGames = juegosComprados.filter(juego => juego.recent === 'yes');
+                break;
+            default:
+                filteredGames = juegosComprados;
+                break;
+        }
+
+        renderLibrary(filteredGames);
+    });
+    
+
+    window.eliminarJuego = function(index) {
+        if (confirm('¿Estás seguro de que deseas eliminar este juego de tu biblioteca?')) {
+            juegosComprados.splice(index, 1);
+            localStorage.setItem('juegosComprados', JSON.stringify(juegosComprados));
+            renderLibrary(juegosComprados);
+        }
+    }
+
+    window.verMasDetalles = function(index) {
+        const juego = juegosComprados[index];
+        document.getElementById('modalGameTitle').textContent = juego.nombre;
+        document.getElementById('modalGameImage').src = juego.imagen;
+        document.getElementById('modalGameDescription').textContent = `Descripción extendida de ${juego.nombre}.`;
+        document.getElementById('modalGamePrice').textContent = `Precio: $${juego.precio}`;
+        document.getElementById('modalGameRating').textContent = 'Calificación: ★★★★☆';
+        document.getElementById('review1').textContent = 'Esta es una reseña ficticia del juego ...';
+        document.getElementById('review2').textContent = 'Esta es otra reseña ficticia del juego ...';
+        document.getElementById('gameDetailsModal').style.display = 'block';
+    }
+
+    window.closeGameModal = function() {
+        document.getElementById('gameDetailsModal').style.display = 'none';
+    }
+
+    renderLibrary(juegosComprados);
+});
+
+    </script>
+    <script src="./script.js"></script>
+</body>
+</html>
